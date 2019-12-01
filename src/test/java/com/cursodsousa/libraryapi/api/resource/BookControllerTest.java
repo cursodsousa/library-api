@@ -5,6 +5,7 @@ import com.cursodsousa.libraryapi.exception.BusinessException;
 import com.cursodsousa.libraryapi.model.entity.Book;
 import com.cursodsousa.libraryapi.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -128,9 +130,9 @@ public class BookControllerTest {
                 .build();
 
         BDDMockito.given( service.findByExample(Mockito.any(Book.class), Mockito.any(Pageable.class
-        )) ).willReturn(new PageImpl(Collections.emptyList(), PageRequest.of(0,10), 0));
+        )) ).willReturn(new PageImpl(Arrays.asList(book), PageRequest.of(0,100), 1));
 
-        String query = String.format("?title=%s&author=%s&page=1&size=100", book.getTitle(), book.getAuthor());
+        String query = String.format("?title=%s&author=%s&page=0&size=100", book.getTitle(), book.getAuthor());
 
         //execucao (when)
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
@@ -140,7 +142,10 @@ public class BookControllerTest {
         mvc
                 .perform(request)
                 .andExpect(status().isOk())
-                .andExpect( jsonPath("$.", hasSize(1)) )
+                .andExpect( jsonPath("content", hasSize(1)) )
+                .andExpect( jsonPath("totalElements").value(1) )
+                .andExpect( jsonPath("pageable.pageSize").value(100) )
+                .andExpect( jsonPath("pageable.pageNumber").value(0) )
         ;
     }
 
