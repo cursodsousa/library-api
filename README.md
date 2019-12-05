@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.org/cursodsousa/library-api.svg?branch=feature_swagger)](https://travis-ci.org/cursodsousa/library-api)
