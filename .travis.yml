@@ -1,9 +1,9 @@
 language: java
 jdk:
   - oraclejdk8
-script: "mvn cobertura:cobertura"
+script:
+  - ./mvnw clean install
+  - bash <(curl -s https://codecov.io/bash)
 before_install:
   - chmod +x mvnw
 dist: trusty
-after_success:
-  - bash <(curl -s https://codecov.io/bash) -t uuid-repo-token
