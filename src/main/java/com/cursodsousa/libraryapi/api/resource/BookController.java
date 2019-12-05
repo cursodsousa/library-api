@@ -5,6 +5,10 @@ import com.cursodsousa.libraryapi.api.exception.ApiErros;
 import com.cursodsousa.libraryapi.exception.BusinessException;
 import com.cursodsousa.libraryapi.model.entity.Book;
 import com.cursodsousa.libraryapi.service.BookService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,6 +26,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/books")
+@Api("Book Api")
 public class BookController {
 
     private BookService service;
@@ -34,6 +39,11 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation("create a book")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "returns a created book"),
+            @ApiResponse(code = 400, message = "invalid request body or duplicated isbn")
+    })
     public BookDTO create( @RequestBody @Valid BookDTO dto ){
         Book entity = modelMapper.map( dto, Book.class );
         entity = service.save(entity);
@@ -41,6 +51,7 @@ public class BookController {
     }
 
     @GetMapping("{id}")
+    @ApiOperation("obtain a book details by id")
     public BookDTO get( @PathVariable Long id ){
         return service
                 .getById(id)
@@ -50,12 +61,14 @@ public class BookController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiOperation("delete a book by id")
     public void delete(@PathVariable Long id){
         Book book = service.getById(id).orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND) );
         service.delete(book);
     }
 
     @PutMapping("{id}")
+    @ApiOperation("update a book")
     public BookDTO update( @PathVariable Long id, BookDTO dto){
         return service.getById(id).map( book -> {
 
@@ -68,6 +81,7 @@ public class BookController {
     }
 
     @GetMapping
+    @ApiOperation("find a books by params")
     public Page<BookDTO> find( BookDTO dto, Pageable pageRequest ){
         Book filter = modelMapper.map(dto, Book.class);
         Page<Book> result = service.find(filter, pageRequest);
