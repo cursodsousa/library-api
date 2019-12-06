@@ -13,8 +13,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 @SpringBootApplication
 public class LibraryApiApplication {
 
-	@Autowired
-	private JavaMailSender mailSender;
+//	@Autowired
+//	private JavaMailSender mailSender;
 
 	@Bean
 	public ModelMapper modelMapper(){
@@ -22,16 +22,16 @@ public class LibraryApiApplication {
 	}
 
 //	@Bean
-	public CommandLineRunner commandLineRunner(){
-		return args -> {
-			SimpleMailMessage mailMessage = new SimpleMailMessage();
-			mailMessage.setFrom("library@mail.com");
-			mailMessage.setSubject("Test");
-			mailMessage.setText("text");
-			mailMessage.setTo("dougllasfps@gmail.com");
-			mailSender.send(mailMessage);
-		};
-	}
+//	public CommandLineRunner commandLineRunner(){
+//		return args -> {
+//			SimpleMailMessage mailMessage = new SimpleMailMessage();
+//			mailMessage.setFrom("library@mail.com");
+//			mailMessage.setSubject("Test");
+//			mailMessage.setText("text");
+//			mailMessage.setTo("dougllasfps@gmail.com");
+//			mailSender.send(mailMessage);
+//		};
+//	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryApiApplication.class, args);
