@@ -1,6 +1,7 @@
 package com.cursodsousa.libraryapi.api.resource;
 
 import com.cursodsousa.libraryapi.api.dto.LoanDTO;
+import com.cursodsousa.libraryapi.api.dto.PartialLoanDTO;
 import com.cursodsousa.libraryapi.exception.BusinessException;
 import com.cursodsousa.libraryapi.model.entity.Book;
 import com.cursodsousa.libraryapi.model.entity.Loan;
@@ -8,6 +9,7 @@ import com.cursodsousa.libraryapi.service.BookService;
 import com.cursodsousa.libraryapi.service.LoanService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -116,6 +118,21 @@ public class LoanControllerTest {
                 .andExpect( jsonPath("errors", Matchers.hasSize(1)) )
                 .andExpect( jsonPath("errors[0]").value("Book already loaned"))
         ;
+    }
+
+    @Test@Disabled
+    @DisplayName("Deve retornar um livro")
+    public void returnBookTest() throws Exception{
+        PartialLoanDTO partialLoan = new PartialLoanDTO();
+        partialLoan.setReturned(true);
+
+        mvc.perform(
+                MockMvcRequestBuilders
+                        .patch(LOAN_API.concat("/1"))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(partialLoan))
+        ).andExpect( status().isOk() );
     }
 
 }
